@@ -8,7 +8,7 @@ close all;clear;clc;
 [noise1,fsn1] = audioread('fan_noise.wav');
 [noise2,fsn2] = audioread('construction_talking_noise.wav');
 % trim sound files
-music_time = 4;
+music_time = 16;
 % the soundtrack include in my repo only have 36 in maximum, you  need
 % substitute to your own to try longer music clip
 fprintf('Demo music have %d seconds\n',music_time);
@@ -43,7 +43,7 @@ mix6 = quite_music+noise1+noise2;
 %% algorithm performance comparision
 % input Parameters setting：
 mu =  0.1;    % LMS stepsize
-mu2 = 0.5;    % NLMS stepsize
+mu2 = 0.01;    % NLMS stepsize
 a = 0.1;     % normalised step sized for NLMS algorithm
 lamda = 0.999;%RLS weight        
 M=10;         %learned filter length
