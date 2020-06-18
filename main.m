@@ -42,7 +42,9 @@ mix6 = quite_music+noise1+noise2;
       
 %% algorithm performance comparision
 % input Parameters setting：
-mu =  0.1;    %LMS stepsize      
+mu =  0.1;    % LMS stepsize
+mu2 = 0.5;    % NLMS stepsize
+a = 0.1;     % normalised step sized for NLMS algorithm
 lamda = 0.999;%RLS weight        
 M=10;         %learned filter length
 ref_mic = noise1*2; % the pure noise record by reference microphone, only
@@ -59,6 +61,11 @@ tic
 [err_lms, op_lms, f_para_lms] = LMS(error_mic, ref_mic, mu, M);
 disp('LMS algorithm spend')
 toc
+% use NLMS algorithm
+tic
+[err_nlms, op_nlms, f_para_nlms] = NLMS(error_mic, ref_mic, mu2, M, a);
+disp('NLMS algorithm spend')
+toc
 % Use RLS algorithm (Recursive Least Squares)
 tic
 [err_rls, op_rls, f_para_rls] = RLS(error_mic, ref_mic, lamda, M);
@@ -74,17 +81,22 @@ disp('playing original NOISY music');
 noisy_sound = audioplayer(error_mic,fs);
 play(noisy_sound)
 pause(music_time+1);% wait till finished playing
+
 disp('playing LMS ANCed music');
 ANCed_sound=audioplayer(error_mic+op_lms,fs);
 play(ANCed_sound);
-
 pause(music_time+1);% wait till finished playing
+
+disp('playing NLMS ANCed music');
+ANCed_sound=audioplayer(error_mic+op_nlms,fs);
+play(ANCed_sound);
+pause(music_time+1);% wait till finished playing
+
 disp('playing RLS ANCed music');
 ANCed_sound=audioplayer(error_mic+op_rls,fs);
 play(ANCed_sound);
-
 pause(music_time+1);% wait till finished playing
+
 disp('playing Kalman filter ANCed music');
 ANCed_sound=audioplayer(error_mic+op_kalman,fs);
 play(ANCed_sound)
-
